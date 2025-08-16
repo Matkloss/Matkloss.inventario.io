@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario Móvil</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+  <h2>📦 Inventario Móvil</h2>
+
+  <div class="controls-container">
+    <div class="button-group">
+      <label for="fileInput" class="file-upload">
+        <i class="fas fa-upload"></i> Importar Inventario
+      </label>
+      <input type="file" id="fileInput" accept=".csv" style="display:none;">
+      <button id="downloadTemplateBtn"><i class="fas fa-file-csv"></i> Descargar Plantilla</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <div class="main-container">
+    <div class="form-section">
+      <h3>Detalles del producto</h3>
+      <label for="productoInput">Seleccionar producto:</label>
+      <input list="productosList" id="productoInput" placeholder="Escribe para buscar..." autocomplete="off">
+      <datalist id="productosList"></datalist>
+
+      <p><b>Código:</b> <span id="codigo"></span></p>
+      <p><b>Descripción:</b> <span id="descripcion"></span></p>
+      <p><b>Cantidad:</b> <span id="cantidad"></span></p>
+
+      <label for="conteoFisico">Conteo Físico</label>
+      <input type="number" id="conteoFisico">
+
+      <label for="fechaConteo">Fecha de Conteo</label>
+      <input type="date" id="fechaConteo">
+
+      <button id="saveBtn">💾 Guardar Conteo</button>
+    </div>
+
+    <div id="countedItemsSection">
+      <h3>Artículos Contados</h3>
+      <table id="countedItemsTable">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Conteo Físico</th>
+            <th>Cantidad Original</th>
+            <th>Diferencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          </tbody>
+      </table>
+      <button id="exportBtn">📊 Exportar Conteo del Día</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
