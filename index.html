@@ -9,6 +9,8 @@
 </head>
 <body>
 
+  <img src="Medlog.png" alt="Logo de Medlog" class="logo">
+
   <h2>📦 Inventario Móvil</h2>
 
   <div class="controls-container">
@@ -36,8 +38,8 @@
       <label for="conteoFisico">Conteo Físico</label>
       <input type="number" id="conteoFisico">
 
-      <label for="fechaConteo">Fecha de Conteo</label>
-      <input type="date" id="fechaConteo">
+      <label for="ubicacionInput">Ubicación</label>
+      <input type="text" id="ubicacionInput">
 
       <button id="saveBtn">💾 Guardar Conteo</button>
     </div>
@@ -48,6 +50,7 @@
         <thead>
           <tr>
             <th>Código</th>
+            <th>Ubicación</th>
             <th>Conteo Físico</th>
             <th>Cantidad Original</th>
             <th>Diferencia</th>
