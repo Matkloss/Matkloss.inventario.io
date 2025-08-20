@@ -14,17 +14,18 @@ const descripcionSpan = document.getElementById("descripcion");
 const cantidadSpan = document.getElementById("cantidad");
 const conteoFisicoInput = document.getElementById("conteoFisico");
 const statusDiv = document.getElementById("status");
-const ubicacionInput = document.getElementById("ubicacionInput"); // Asegúrate de que este elemento exista en tu HTML
+const ubicacionInput = document.getElementById("ubicacionInput");
 
-// Evento para detectar la selección del datalist
+// Evento para detectar la selección del datalist o escritura
 productoInput.addEventListener("input", e => {
   const selectedValue = e.target.value;
-  const itemIndex = items.findIndex(item => `${item["Código"]} - ${item["Descripción"]}` === selectedValue);
-  
-  if (itemIndex !== -1) {
-    showDetails(itemIndex);
+  // Encuentra el ítem basándose en el valor completo del datalist
+  const item = items.find(i => `${i["Código"]} - ${i["Descripción"]}` === selectedValue);
+
+  if (item) {
+    showDetails(item);
   } else {
-    showDetails("");
+    showDetails(null); // Limpia los campos si no hay un producto válido
   }
 });
 
@@ -58,45 +59,48 @@ function parseCSV(data) {
 
 function loadDatalist() {
   productosList.innerHTML = "";
-  items.forEach((item, index) => {
+  items.forEach(item => {
     const option = document.createElement("option");
     option.value = `${item["Código"]} - ${item["Descripción"]}`;
-    option.setAttribute('data-index', index);
     productosList.appendChild(option);
   });
 }
 
-function showDetails(index) {
-  if (index === "") {
+// **Función showDetails() actualizada para recibir un objeto de ítem**
+function showDetails(item) {
+  if (!item) {
     codigoSpan.textContent = "";
     descripcionSpan.textContent = "";
     cantidadSpan.textContent = "";
     conteoFisicoInput.value = "";
-    if (ubicacionInput) ubicacionInput.value = "";
+    ubicacionInput.value = "";
     return;
   }
-  const item = items[index];
   codigoSpan.textContent = item["Código"] || "";
   descripcionSpan.textContent = item["Descripción"] || "";
   cantidadSpan.textContent = item["Cantidad"] || "";
   conteoFisicoInput.value = item["conteoFisico"] || "";
-  if (ubicacionInput) ubicacionInput.value = item["Ubicación"] || "";
+  ubicacionInput.value = item["Ubicación"] || ""; // ¡Línea clave! Rellena el input de Ubicación.
 }
 
 function saveCount() {
   const selectedValue = productoInput.value;
-  if (!selectedValue) {
-    alert("Por favor, selecciona un producto primero.");
-    return;
-  }
-  
+  // Se busca el item en base al valor exacto del datalist
   const item = items.find(i => `${i["Código"]} - ${i["Descripción"]}` === selectedValue);
+
   if (!item) {
-    alert("Producto no válido. Por favor, selecciona uno de la lista.");
+    alert("Por favor, selecciona un producto de la lista.");
     return;
   }
 
-  // Se asegura de que la fecha se genere siempre de forma automática
+  const conteoFisicoValue = conteoFisicoInput.value;
+  const ubicacionValue = ubicacionInput.value;
+
+  if (!conteoFisicoValue || !ubicacionValue) {
+    alert("Por favor, completa los campos de Conteo Físico y Ubicación.");
+    return;
+  }
+
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -105,12 +109,12 @@ function saveCount() {
   
   const countedItem = {
     "Código": item["Código"],
-    "Ubicación": ubicacionInput ? ubicacionInput.value : "", // Maneja el campo de Ubicación
-    "Conteo Físico": conteoFisicoInput.value,
+    "Ubicación": ubicacionValue,
+    "Conteo Físico": conteoFisicoValue,
     "Cantidad Original": item["Cantidad"],
-    "Diferencia": parseInt(conteoFisicoInput.value) - parseInt(item["Cantidad"]),
+    "Diferencia": parseInt(conteoFisicoValue) - parseInt(item["Cantidad"]),
     "Descripción": item["Descripción"],
-    "conteoFisico": conteoFisicoInput.value,
+    "conteoFisico": conteoFisicoValue,
     "fechaConteo": fechaActual,
   };
   
@@ -124,7 +128,7 @@ function saveCount() {
   alert(`✅ Conteo guardado para el producto: ${item["Descripción"]}`);
   
   productoInput.value = "";
-  showDetails("");
+  showDetails(null);
 
   renderCountedItems();
 }
